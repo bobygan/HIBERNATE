@@ -1,28 +1,28 @@
-package hibernate.lesson7.dao;
-import hibernate.lesson7.models.Hotel;
+package hibernate.lesson8.dao;
+import hibernate.lesson8.models.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-public class HotelDAO {
+public class UserDAO {
 
 
     private static SessionFactory sessionFactory;
 
 
-    public Hotel save(Hotel hotel) {
+    public User save(User user) {
         Transaction tr = null;
         try (Session session = createSessionFactory().openSession()) {
             tr = session.getTransaction();
             tr.begin();
-            session.save(hotel);
-            long tempId = (long) session.save(hotel);
+            session.save(user);
+            long tempId = (long) session.save(user);
             tr.commit();
             System.out.println("Done save");
-            hotel.setId(tempId);
-            return hotel;
+           // user.setId(tempId);
+            return user;
         } catch (HibernateException e) {
             System.err.println("Something went wrong during save");
             e.printStackTrace();
@@ -34,15 +34,15 @@ public class HotelDAO {
 
     }
 
-    public Hotel update(Hotel hotel) {
+    public User update(User user) {
         Transaction tr = null;
         try (Session session = createSessionFactory().openSession()) {
             tr = session.getTransaction();
             tr.begin();
-            session.update(hotel);
+            session.update(user);
             tr.commit();
             System.out.println("Done update");
-            return hotel;
+            return user;
         } catch (HibernateException e) {
             System.err.println("Something went wrong during update");
             e.printStackTrace();
@@ -54,17 +54,39 @@ public class HotelDAO {
 
     }
 
-    public Hotel delete(Hotel hotel) {
+    public User delete(User user) {
         Transaction tr = null;
         try (Session session = createSessionFactory().openSession()) {
             tr = session.getTransaction();
             tr.begin();
-            session.delete(hotel);
+            session.delete(user);
             tr.commit();
             System.out.println("Done delete");
-            return hotel;
+            return user;
         } catch (HibernateException e) {
             System.err.println("Something went wrong during delete");
+            e.printStackTrace();
+            if (tr != null) {
+                tr.rollback();
+            }
+            throw e;
+        }
+    }
+
+    public User findById(Long id) {
+        Transaction tr = null;
+        User user;
+        try (Session session = createSessionFactory().openSession()) {
+            tr = session.getTransaction();
+            tr.begin();
+            user = (User) session.load(User.class, new Long(id));
+            if(user!=null) {
+                System.out.println("Done findById");
+            }
+            tr.commit();
+            return user;
+        } catch (HibernateException e) {
+            System.err.println("Something went wrong during findById");
             e.printStackTrace();
             if (tr != null) {
                 tr.rollback();

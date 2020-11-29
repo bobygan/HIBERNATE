@@ -8,8 +8,15 @@
         <property name="hibernate.connection.url">jdbc:oracle:thin:@gromcode-lessons.cdljhcyb8kvt.us-east-2.rds.amazonaws.com:1521:ORCL</property>
         <property name="hibernate.connection.username">main</property>
         <property name="hibernate.connection.password">9010qwer</property>
-        <mapping class="hibernate.lesson7.models.Hotel" ></mapping>
-        <mapping class="hibernate.lesson7.models.Room" ></mapping>
+
+
+        <mapping class="hibernate.lesson8.models.Room" ></mapping>
+        <mapping class="hibernate.lesson8.models.User" ></mapping>
+        <mapping class="hibernate.lesson8.models.Filter" ></mapping>
+        <mapping class="hibernate.lesson8.models.Hotel" ></mapping>
+        <mapping class="hibernate.lesson8.models.Order" ></mapping>
+
+
 
     </session-factory>
 
