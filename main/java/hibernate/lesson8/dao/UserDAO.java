@@ -17,7 +17,7 @@ public class UserDAO {
     public User findById(long id) {
         return dao.findById(id);
     }
-    public User findByName(String name) {
+    public User findByName(String name) throws IllegalAccessException{
         return dao.findByNameUser(name);
     }
 

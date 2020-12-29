@@ -1,13 +1,11 @@
 package hibernate.lesson8.demo;
 
 import hibernate.lesson8.controller.Controller;
-import hibernate.lesson8.dao.DAO;
-import hibernate.lesson8.dao.HotelDAO;
-import hibernate.lesson8.dao.RoomDAO;
-import hibernate.lesson8.dao.UserDAO;
-import hibernate.lesson8.models.*;
+import hibernate.lesson8.models.Filter;
+import hibernate.lesson8.models.Room;
+import hibernate.lesson8.models.User;
+import hibernate.lesson8.models.UserType;
 
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +16,8 @@ public class Demo {
     public static void main(String[] args) throws IOException {
 
         Controller controller = new Controller();
+
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int choice = 0;
 
@@ -25,7 +25,13 @@ public class Demo {
             System.out.println("\nChoose.\n" +
                     "1 - login\n" +
                     "2 - Register User\n" +
-                    "3 - Exit");
+                    "3 - logout\n" +
+                    "4 - findHotelByCity\n" +
+                    "5 - findHotelByName\n" +
+                    "6 - findRoomsByFilter\n" +
+                    "7 - bookRoom\n" +
+                    "8 - canselReservation\n" +
+                    "9 - Exit");
             choice = Integer.parseInt(reader.readLine());
 
             if (choice == 1) {
@@ -34,37 +40,9 @@ public class Demo {
                 System.out.print("Input password: ");
                 String password = reader.readLine();
                 controller.login(userName, password);
+            }
 
-                do {
-                    System.out.println("\nChoose.\n" +
-                            "1 - findHotelByCity\n" +
-                            "2 - findHotelByName\n" +
-                            "3 - findRoomsByFilter\n" +
-                            "4 - Exit");
-                    choice = Integer.parseInt(reader.readLine());
-
-                    if (choice == 1) {
-                        System.out.print("Input hotel city: ");
-                        System.out.println(controller.findHotelByCity(reader.readLine()).toString());
-
-
-                    } else if (choice == 2) {
-                        System.out.print("Input hotel name: ");
-                        System.out.println(controller.findHotelByName(reader.readLine()).toString());
-
-                    } else if (choice == 3) {
-                        Filter filter=new Filter();
-                        System.out.print("Input prise: ");
-
-                        filter.setPrice(Double.parseDouble(reader.readLine()));
-                        for (Room room : controller.findRooms(filter))
-                            System.out.println(room.toString());
-
-                    }
-
-                } while (choice != 4);
-
-            } else if (choice == 2) {
+            if (choice == 2) {
                 User user = new User();
                 System.out.print("Input user name: ");
                 user.setUserName(reader.readLine());
@@ -85,39 +63,83 @@ public class Demo {
                 controller.registerUser(user);
 
             }
-        }
-            while (choice != 3) ;
+
+            if (choice == 3) {
+                System.out.print("logout done: ");
+                controller.logout();
+            }
+
+            if (choice == 4) {
+                System.out.print("Input hotel city: ");
+                System.out.println(controller.findHotelByCity(reader.readLine()).toString());
+            }
+
+            if (choice == 5) {
+                System.out.print("Input hotel name: ");
+                try {
+                    System.out.println(controller.findHotelByName(reader.readLine()).toString());
+                } catch (IllegalAccessException e) {
+                }
+            }
+
+            if (choice == 6) {
+                Filter filter = new Filter();
+                System.out.print("Input prise: ");
+                filter.setPrice(Double.parseDouble(reader.readLine()));
+                System.out.print("\nChoose.\n" +
+                        "0 - Without breakfast\n" +
+                        "1 - Breakfast included");
+                filter.setBreakfastIncluded(Boolean.parseBoolean(reader.readLine()));
+                System.out.print("Input number of guests: ");
+                filter.setNumberOfGuests(Integer.parseInt(reader.readLine()));
+
+                for (Room rooms : controller.findRooms(filter)) {
+                    if (null != rooms.getHotel()) {
+                        rooms.getHotel().setRooms(null);
+                    }
+                    System.out.println(rooms.toString());
+                }
+
+            }
 
 
-            User user = new User();
-            user.setId(16);
-            user.setPassword("12");
-            user.setUserName("Ivan10");
-            user.setCountry("Odessa");
-            UserType userType = UserType.USER;
-            user.setUserType(userType);
-            Order order = new Order();
-            order.setId(2);
 
-            Room room = new Room();
-            room.setId(520);
-            room.setNumberOfGuests(100);
-            room.setPrice(25);
-            room.setBreakfastIncluded(true);
-            ArrayList<Room> listRoom = new ArrayList<>();
-            listRoom.add(room);
+    }
+        while(choice !=9);
+}
+}
+/*
+
+         //   User user = new User();
+         //   user.setId(16);
+        //    user.setPassword("12");
+          //  user.setUserName("Ivan10");
+         //   user.setCountry("Odessa");
+         //   UserType userType = UserType.USER;
+         //   user.setUserType(userType);
+         ///   Order order = new Order();
+         //   order.setId(2);
+
+         //   Room room = new Room();
+         //   room.setId(520);
+         //   room.setNumberOfGuests(100);
+         //   room.setPrice(25);
+         //   room.setBreakfastIncluded(true);
+         //   ArrayList<Room> listRoom = new ArrayList<>();
+         //   listRoom.add(room);
             //////////////////////////////////
-            Hotel hotel = new Hotel();
-            hotel.setId(235);
-            hotel.setName("odessa");
-            hotel.setCountry("UA");
-            hotel.setCity("RENI");
-            hotel.setRooms(listRoom);
+       //     Hotel hotel = new Hotel();
+       //     hotel.setId(235);
+       //     hotel.setName("odessa");
+       //     hotel.setCountry("UA");
+       //     hotel.setCity("RENI");
+        //    hotel.setRooms(listRoom);
 
 
             Filter filter = new Filter();
-            filter.setId(12);
+            filter.setId(0);
             filter.setPrice(25);
+            filter.setBreakfastIncluded(true);
 
             //   room.setHotel(hotel);
             // room.setHotel(hotel);
@@ -126,31 +148,37 @@ public class Demo {
             //    Filter filter=new Filter();
 
 
-            UserDAO userDAO = new UserDAO();
-            RoomDAO roomDAO = new RoomDAO();
-            HotelDAO hotelDAO = new HotelDAO();
-            DAO dao = new DAO(Hotel.class);
+      //      UserDAO userDAO = new UserDAO();
+        ///    RoomDAO roomDAO = new RoomDAO();
+        //    HotelDAO hotelDAO = new HotelDAO();
 
+       // System.out.println( dao.findRooms(filter).d);
+        for (Room rooms : controller.findRooms(filter)){
+            if (null!=rooms.getHotel()){
+                rooms.getHotel().setRooms(null);
+            }
+            System.out.println(rooms.toString());
+        }
 
             //  controller.registerUser(user);
             //  controller.faindHotelByName("ss");
-            //  controller.login("Ivan10","12");
-            //  System.out.println( controller.faindHotelByName("sss").toString());
+              controller.login("a","12");
+          //    System.out.println( controller.findHotelByName("sss").toString());
             // Service service=new Service();
             //System.out.println( controller.faindHotelByCity("OD").toString());
-            System.out.println(controller.findRooms(filter).
+        //    System.out.println(controller.findRooms(filter).
 
-                    toString());
+          //          toString());
 
             //dao.getGenericTypeClass();
-            try {
+          //  try {
 //    hotelDAO.save(hotel);
                 //   hotelDAO.delete(200);
                 //  roomDAO.save(room);
                 //  userDAO.save(user);
-            } catch (
-                    Exception e) {
-                System.out.println("lkecjhurekj ");
+         //   } catch (
+           //         Exception e) {
+           //     System.out.println("lkecjhurekj ");
             }
 
 
@@ -196,7 +224,7 @@ public class Demo {
             // }
 
 
-        }
+      //  }
 
 
-    }
+ */

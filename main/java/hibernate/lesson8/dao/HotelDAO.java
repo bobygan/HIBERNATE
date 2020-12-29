@@ -22,7 +22,7 @@ public class HotelDAO {
         return dao.findById(id);
     }
 
-    public Hotel findByName(String name) {
+    public Hotel findByName(String name) throws IllegalAccessException{
      return    dao.findByNameHotel(name);
     }
 
