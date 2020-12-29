@@ -2,6 +2,7 @@ package hibernate.lesson8.models;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "USER_")
@@ -13,8 +14,16 @@ public class User {
     private UserType userType;
 
 
+    //@Id
+    //@Column(name = "ID")
+   // public long getId() {
+   //     return id;
+   // }
+
     @Id
-    @Column(name = "USER_ID")
+    @SequenceGenerator(name="PR_SEQ",sequenceName ="USER__SEQ" ,allocationSize = 1)
+    @GeneratedValue(strategy =GenerationType.SEQUENCE,generator = "PR_SEQ")
+    @Column(name = "ID")
     public long getId() {
         return id;
     }
@@ -40,12 +49,13 @@ public class User {
         return userType;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userOrdered", cascade = CascadeType.ALL)
-    private List<Order> orders;
-
+    @OneToMany(targetEntity = Order.class,fetch = FetchType.LAZY, mappedBy = "userOrdered", cascade = CascadeType.ALL)
     public List<Order> getOrders() {
         return orders;
     }
+    private List<Order> orders=new ArrayList<Order>();
+
+
 
     public void setId(long id) {
         this.id = id;

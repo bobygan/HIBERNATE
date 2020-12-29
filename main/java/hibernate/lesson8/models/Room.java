@@ -1,4 +1,5 @@
 package hibernate.lesson8.models;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -13,25 +14,30 @@ public class Room {
     private Date dateAvailableFrom;
 
     @Id
-   // @SequenceGenerator(name="PR_SEQ",sequenceName ="PRODUCT_SEQ" ,allocationSize = 1)
-   // @GeneratedValue(strategy =GenerationType.SEQUENCE,generator = "PR_SEQ")
+    // @SequenceGenerator(name="PR_SEQ",sequenceName ="PRODUCT_SEQ" ,allocationSize = 1)
+    // @GeneratedValue(strategy =GenerationType.SEQUENCE,generator = "PR_SEQ")
     @Column(name = "ID")
-    public long getId() { return id; }
+    public long getId() {
+        return id;
+    }
 
     @Column(name = "NUMBEROFGUESTS")
     public int getNumberOfGuests() {
         return numberOfGuests;
     }
 
+
     @Column(name = "PRICE")
     public double getPrice() {
         return price;
     }
 
+
     @Column(name = "BREAKFASTINCLUDED")
     public boolean getBreakfastIncluded() {
         return breakfastIncluded;
     }
+
 
     @Column(name = "PETSALLOWED")
     public boolean getPetsAllowed() {
@@ -44,18 +50,21 @@ public class Room {
     }
 
 
-    @OneToOne(mappedBy = "room",cascade={CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "room", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    public Order getOrder() {
+        return order;
+    }
+
     private Order order;
 
 
-    @ManyToOne (cascade={CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinColumn(name="HOTEL_ID")
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "HOTEL_ID")
+    public Hotel getHotel() {
+        return hotel;
+    }
+
     private Hotel hotel;
-
-    public Hotel getHotel() { return hotel;}
-
-
-
 
 
     public void setId(long id) {
@@ -87,6 +96,10 @@ public class Room {
         this.hotel = hotel;
     }
 
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     @Override
     public String toString() {
         return "Room{" +
@@ -96,7 +109,7 @@ public class Room {
                 ", breakfastIncluded=" + breakfastIncluded +
                 ", petsAllowed=" + petsAllowed +
                 ", dateAvailableFrom=" + dateAvailableFrom +
-               // ", hotel=" + hotel +
+                ", hotel=" + hotel +
                 '}';
     }
 }

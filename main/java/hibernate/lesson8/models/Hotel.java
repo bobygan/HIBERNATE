@@ -1,9 +1,10 @@
 package hibernate.lesson8.models;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name ="HOTEL")
+@Table(name = "HOTEL")
 public class Hotel {
     private long id;
     private String name;
@@ -38,18 +39,22 @@ public class Hotel {
     }
 
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    private List<Room> rooms;
-
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
-    }
-
+    @OneToMany(fetch = FetchType.EAGER,targetEntity = Room.class, mappedBy = "hotel", cascade = CascadeType.ALL)
     public List<Room> getRooms() {
         return rooms;
     }
 
+    private List<Room> rooms;
 
+    public void setRooms(List<Room> rooms) {
+        if (rooms !=null){
+            rooms.forEach(a->{
+                a.setHotel(this);
+            });
+        }
+
+        this.rooms = rooms;
+    }
 
 
     public void setId(long id) {
@@ -80,6 +85,7 @@ public class Hotel {
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", street='" + street + '\'' +
+                ", rooms=" + rooms +
                 '}';
     }
 }

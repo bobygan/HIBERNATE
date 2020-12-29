@@ -1,105 +1,33 @@
 package hibernate.lesson8.dao;
+import hibernate.lesson8.models.Filter;
 import hibernate.lesson8.models.Room;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+
+import java.util.List;
 
 public class RoomDAO {
 
 
-    private static SessionFactory sessionFactory;
+    private    DAO<Room>dao= new DAO<>(Room.class);
 
-
-    public Room save(Room room) {
-        Transaction tr = null;
-        try (Session session = createSessionFactory().openSession()) {
-            tr = session.getTransaction();
-            tr.begin();
-            session.save(room);
-           // long tempId = (long) session.save(room);
-            tr.commit();
-            System.out.println("Done save");
-           // room.setId(tempId);
-            return room;
-        } catch (HibernateException e) {
-            System.err.println("Something went wrong during save");
-            e.printStackTrace();
-            if (tr != null) {
-                tr.rollback();
-            }
-            throw e;
-        }
-
+    public Room save(Room ob) throws IllegalAccessException {
+        return dao.save(ob);
     }
 
-    public Room update(Room room) {
-        Transaction tr = null;
-        try (Session session = createSessionFactory().openSession()) {
-            tr = session.getTransaction();
-            tr.begin();
-            session.update(room);
-            tr.commit();
-            System.out.println("Done update");
-            return room;
-        } catch (HibernateException e) {
-            System.err.println("Something went wrong during update");
-            e.printStackTrace();
-            if (tr != null) {
-                tr.rollback();
-            }
-            throw e;
-        }
-
+    public Room update(Room ob) {
+        return dao.update(ob);
     }
 
-    public Room delete(Room room) {
-        Transaction tr = null;
-        try (Session session = createSessionFactory().openSession()) {
-            tr = session.getTransaction();
-            tr.begin();
-            session.delete(room);
-            tr.commit();
-            System.out.println("Done delete");
-            return room;
-        } catch (HibernateException e) {
-            System.err.println("Something went wrong during delete");
-            e.printStackTrace();
-            if (tr != null) {
-                tr.rollback();
-            }
-            throw e;
-        }
+    public void delete(long id) {
+        dao.delete(id);
     }
 
-    public Room findById(Long id) {
-        Transaction tr = null;
-        Room room;
-        try (Session session = createSessionFactory().openSession()) {
-            tr = session.getTransaction();
-            tr.begin();
-            room = (Room) session.load(Room.class, new Long(id));
-            if(room!=null) {
-                System.out.println("Done findById");
-            }
-            tr.commit();
-            return room;
-        } catch (HibernateException e) {
-            System.err.println("Something went wrong during findById");
-            e.printStackTrace();
-            if (tr != null) {
-                tr.rollback();
-            }
-            throw e;
-        }
+    public Room findById(long id) {
+        return dao.findById(id);
     }
 
-    private static SessionFactory createSessionFactory() {
-        if (sessionFactory == null) {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        }
-        return sessionFactory;
+    public List<Room> findRooms(Filter filter) {
+        return dao.findRooms(filter);
     }
+
 
 }

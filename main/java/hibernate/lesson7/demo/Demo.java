@@ -6,7 +6,7 @@ import hibernate.lesson7.models.Room;
 
 import java.sql.Date;
 
-public class Demo {
+public class  Demo {
     public static void main(String[] args) {
         Hotel hotel=new Hotel();
         hotel.setCity("Reni");
